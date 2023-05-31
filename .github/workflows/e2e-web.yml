@@ -65,7 +65,7 @@ jobs:
 
       - name: Install and Build
         env:
-          REDEFINE_AUTH: "e88afb65-65ef-4798-bc9d-db4c5342f7f3::163bf879-4060-4636-9fb6-49161e68095a"
+          REDEFINE_AUTH: "${{ secrets.REDEFINE_AUTH }}"
         run: |
           pnpm install
           pnpm run create:config
@@ -84,7 +84,7 @@ jobs:
         uses: cypress-io/github-action@v4
         with:
           record: ${{ env.CYPRESS_RECORD_KEY != 0 }}
-          env:  "REDEFINE_AUTH=e88afb65-65ef-4798-bc9d-db4c5342f7f3::163bf879-4060-4636-9fb6-49161e68095a"
+          env:  "REDEFINE_AUTH=${{ secrets.REDEFINE_AUTH }}"
           start: pnpm run start-ci
           wait-on: http://localhost:8000
           wait-on-timeout: 1200
