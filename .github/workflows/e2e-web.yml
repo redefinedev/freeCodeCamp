@@ -101,7 +101,7 @@ jobs:
           browser: ${{ matrix.browsers }}
           # spec:  cypress/e2e/default/learn/challenges/code-storage.ts
       
-      - name: Install and Build
+      - name: get redefine logs
         run: |
           echo "Redefine Daemon Log"
           cat /tmp/redefine_daemon.log || true
