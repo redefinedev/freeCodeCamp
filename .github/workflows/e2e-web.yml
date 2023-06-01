@@ -84,6 +84,8 @@ jobs:
 
           npx cypress run || true
 
+          redefine config set dry_run=false
+
       - name: Seed Database
         run: pnpm run seed
 
