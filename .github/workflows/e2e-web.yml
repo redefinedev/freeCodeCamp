@@ -69,6 +69,9 @@ jobs:
           REDEFINE_DEBUG_MODE: "true"
         run: |
           pnpm install
+          pnpm run create:config
+          pnpm run build:curriculum
+          pnpm run build:server
           # we can't use the regular pip since we want to send to staging so we need a staging cert
           # pip install redefine --index-url https://redefine.dev/pip/
           pip install ${GITHUB_WORKSPACE}/redefine-0.15.1.post2-py3-none-manylinux1_x86_64.whl
