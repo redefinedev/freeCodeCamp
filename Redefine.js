@@ -107361,12 +107361,10 @@ var require_RedefineSelection = __commonJS({
     exports2.RedefineSelection = void 0;
     var dataBuilder2 = require_DataBuilder();
     var test_selection_pb_1 = require_test_selection_pb();
-    var coyote_pb_1 = require_coyote_pb();
     var identifier_pb_1 = require_identifier_pb();
     var globby = require_globby();
     var fs = require("fs");
     var os_1 = require("os");
-    var RoadRunnerConfig_12 = require_RoadRunnerConfig();
     var test_framework_pb_1 = require_test_framework_pb();
     var child_process_1 = require("child_process");
     var crypto_1 = require("crypto");
@@ -107386,84 +107384,39 @@ var require_RedefineSelection = __commonJS({
       }
       RedefineSelection2.prototype.selectTests = function(cypressConfig) {
         return __awaiter2(this, void 0, void 0, function() {
-          var originalSpecFilesPattern, originalSpecFiles, testSelectionRequest, response, testSelectionList, testSelection, a2, max, index, test_1, predictionData, specFiles_1, fallbackStrategy, specFiles;
-          var _this = this;
+          var originalSpecFilesPattern, originalSpecFiles, testSelectionRequest, response, testSelectionList, testSelection, a2, max, index, test_1, predictionData, b2;
           return __generator2(this, function(_a) {
-            switch (_a.label) {
-              case 0:
-                originalSpecFilesPattern = cypressConfig.specPattern;
-                originalSpecFiles = this.collectSpecs(cypressConfig);
-                this.numSpecsCollected = originalSpecFiles.length;
-                this.collectTests(originalSpecFiles);
-                this.initialTestCount = this.testsList.length;
-                this.initialTestCount += this.skippedTests.length;
-                testSelectionRequest = dataBuilder2.buildGetTestSelectionRequest(this.roadRunnerConfig.config, this.testsList);
-                return [4, this.client.getTestSelection(testSelectionRequest).then(function(gtsResponse) {
-                  _this.logger.info("GetTestSelection sent successfully");
-                  response = gtsResponse;
-                }).catch(function(error) {
-                  _this.logger.error("GetTestSelection failed with error: ".concat(error.message));
-                  response = void 0;
-                })];
-              case 1:
-                _a.sent();
-                if (response == void 0 || !response.hasTestSelectionList()) {
-                  response = new coyote_pb_1.GetTestSelectionResponse();
-                  testSelectionList = new test_selection_pb_1.TestSelectionList();
-                  testSelection = new test_selection_pb_1.TestSelection();
-                  a2 = [];
-                  max = 7;
-                  for (index = 0; index < 120; index++) {
-                    test_1 = new test_selection_pb_1.Test();
-                    test_1.setTestIdx(index);
-                    predictionData = new test_selection_pb_2.PredictionData();
-                    if (index < max) {
-                      predictionData.setSelected(true);
-                    } else {
-                      predictionData.setSelected(false);
-                    }
-                    testSelection.setPredictionData(predictionData);
-                    testSelection.setTest(test_1);
-                    a2.push(testSelection);
-                  }
-                  testSelectionList.setTestSelectionsList(a2);
-                  response.setTestSelectionList(testSelectionList);
-                  console.log("test selection list - ", testSelectionList);
-                  specFiles_1 = this.getSpecOrder(response);
-                  return [2, specFiles_1];
-                  if (this.roadRunnerConfig.isActive()) {
-                    fallbackStrategy = this.roadRunnerConfig.config.fallbackStrategy;
-                    this.fallbackStrategyUsed = fallbackStrategy;
-                    this.logger.error("No valid getTestSelection response received in active mode - using fallback ".concat(fallbackStrategy));
-                    switch (fallbackStrategy) {
-                      case test_framework_pb_1.FallbackStrategy.FALLBACK_STRATEGY_RUN_NOTHING:
-                        return [2, []];
-                      case test_framework_pb_1.FallbackStrategy.FALLBACK_STRATEGY_RUN_ALL:
-                        if (this.roadRunnerConfig.isDryRun()) {
-                          return [2, originalSpecFiles];
-                        }
-                        return [2, originalSpecFilesPattern];
-                      case test_framework_pb_1.FallbackStrategy.FALLBACK_STRATEGY_NO_FALLBACK:
-                      case test_framework_pb_1.FallbackStrategy.FALLBACK_STRATEGY_UNSPECIFIED:
-                      default:
-                        this.logger.error("unknown fallback strategy ".concat(fallbackStrategy, ", using default - ").concat(RoadRunnerConfig_12.defaultUserConfiguredFallbackStrategy));
-                        this.fallbackStrategyUsed = RoadRunnerConfig_12.defaultUserConfiguredFallbackStrategy;
-                        if (this.roadRunnerConfig.isDryRun()) {
-                          return [2, originalSpecFiles];
-                        }
-                        return [2, originalSpecFilesPattern];
-                    }
-                  }
-                }
-                if (this.roadRunnerConfig.isPassive()) {
-                  if (this.roadRunnerConfig.isDryRun()) {
-                    return [2, originalSpecFiles];
-                  }
-                  return [2, originalSpecFilesPattern];
-                }
-                specFiles = this.getSpecOrder(response);
-                return [2, specFiles];
+            originalSpecFilesPattern = cypressConfig.specPattern;
+            originalSpecFiles = this.collectSpecs(cypressConfig);
+            this.numSpecsCollected = originalSpecFiles.length;
+            this.collectTests(originalSpecFiles);
+            this.initialTestCount = this.testsList.length;
+            this.initialTestCount += this.skippedTests.length;
+            testSelectionRequest = dataBuilder2.buildGetTestSelectionRequest(this.roadRunnerConfig.config, this.testsList);
+            console.log("building response");
+            testSelectionList = new test_selection_pb_1.TestSelectionList();
+            testSelection = new test_selection_pb_1.TestSelection();
+            a2 = [];
+            max = 7;
+            for (index = 0; index < 120; index++) {
+              test_1 = new test_selection_pb_1.Test();
+              test_1.setTestIdx(index);
+              predictionData = new test_selection_pb_2.PredictionData();
+              if (index < max) {
+                console.log("setting selected for index - ", index);
+                predictionData.setSelected(true);
+              } else {
+                predictionData.setSelected(false);
+              }
+              testSelection.setPredictionData(predictionData);
+              testSelection.setTest(test_1);
+              a2.push(testSelection);
             }
+            testSelectionList.setTestSelectionsList(a2);
+            response.setTestSelectionList(testSelectionList);
+            console.log("test selection list - ", testSelectionList);
+            b2 = this.getSpecOrder(response);
+            return [2, b2];
           });
         });
       };
@@ -107797,6 +107750,7 @@ function registerPlugin(on, cypressConfig) {
           return [4, redefineSelection.selectTests(cypressConfig)];
         case 2:
           selectedSpecPattern = _b.sent();
+          console.log("select test returned - ", selectedSpecPattern);
           cypressConfig.specPattern = selectedSpecPattern;
           if (roadRunnerConfig.config.dryRun) {
             selectedSpecPattern.forEach(function(spec) {
