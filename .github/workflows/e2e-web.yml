@@ -118,7 +118,7 @@ jobs:
           redefine config set selection_mode="active"
           redefine config set log_file_path="/tmp/redefine.log"
           # need to run redefine after re-setting config
-          redefine start --discover --cypress --verbose
+          redefine start --discover --verbose
 
       - name: Cypress run tests
         uses: cypress-io/github-action@v4
