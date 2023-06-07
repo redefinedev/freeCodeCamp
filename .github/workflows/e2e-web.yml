@@ -78,7 +78,7 @@ jobs:
           redefine config set redefine_address=dune-tf-staging.redefine.dev
           redefine config set stable_branch=main
           redefine config set dry_run=true
-          redefine start --discover --cypress --verbose
+          redefine start --discover --pytest --verbose
           # cat cypress.config.js
           # cat cypress/support/e2e.js
 
@@ -111,7 +111,7 @@ jobs:
           # redefine config set stable_branch=main
           redefine config set dry_run=false
           # need to run redefine after re-setting config
-          redefine start --discover --cypress --verbose
+          redefine start --discover --pytest --verbose
 
       - name: Cypress run tests
         uses: cypress-io/github-action@v4
