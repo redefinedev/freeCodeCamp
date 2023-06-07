@@ -69,9 +69,9 @@ jobs:
           REDEFINE_DEBUG_MODE: "true"
         run: |
           pnpm install
-          # pnpm run create:config
-          # pnpm run build:curriculum
-          # pnpm run build:server
+          pnpm run create:config
+          pnpm run build:curriculum
+          pnpm run build:server
           pip install ${GITHUB_WORKSPACE}/redefine-0.15.1.post9-py3-none-manylinux1_x86_64.whl
           redefine config set environment=staging
           redefine config set redefine_address=dune-tf-staging.redefine.dev
