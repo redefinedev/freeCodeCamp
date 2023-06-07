@@ -107382,9 +107382,43 @@ var require_RedefineSelection = __commonJS({
         this.fallbackStrategyUsed = test_framework_pb_1.FallbackStrategy.FALLBACK_STRATEGY_NO_FALLBACK;
         this.logger = logger;
       }
+      RedefineSelection2.prototype.brittTest = function(cypressConfig) {
+        var originalSpecFiles = this.collectSpecs(cypressConfig);
+        this.numSpecsCollected = originalSpecFiles.length;
+        this.collectTests(originalSpecFiles);
+        this.initialTestCount = this.testsList.length;
+        this.initialTestCount += this.skippedTests.length;
+        console.log("found test lit - ", this.testsList);
+        var testSelectionRequest = dataBuilder2.buildGetTestSelectionRequest(this.roadRunnerConfig.config, this.testsList);
+        var response;
+        console.log("building response");
+        var testSelectionList = new test_selection_pb_1.TestSelectionList();
+        var testSelection = new test_selection_pb_1.TestSelection();
+        var a2 = [];
+        var max = 7;
+        for (var index = 0; index < 120; index++) {
+          var test_1 = new test_selection_pb_1.Test();
+          test_1.setTestIdx(index);
+          var predictionData = new test_selection_pb_2.PredictionData();
+          if (index < max) {
+            console.log("setting selected for index - ", index);
+            predictionData.setSelected(true);
+          } else {
+            predictionData.setSelected(false);
+          }
+          testSelection.setPredictionData(predictionData);
+          testSelection.setTest(test_1);
+          a2.push(testSelection);
+        }
+        testSelectionList.setTestSelectionsList(a2);
+        response.setTestSelectionList(testSelectionList);
+        console.log("test selection list - ", testSelectionList);
+        var b2 = this.getSpecOrder(response);
+        return b2;
+      };
       RedefineSelection2.prototype.selectTests = function(cypressConfig) {
         return __awaiter2(this, void 0, void 0, function() {
-          var originalSpecFilesPattern, originalSpecFiles, testSelectionRequest, response, testSelectionList, testSelection, a2, max, index, test_1, predictionData, b2;
+          var originalSpecFilesPattern, originalSpecFiles, testSelectionRequest, response, testSelectionList, testSelection, a2, max, index, test_2, predictionData, b2;
           return __generator2(this, function(_a) {
             originalSpecFilesPattern = cypressConfig.specPattern;
             originalSpecFiles = this.collectSpecs(cypressConfig);
@@ -107399,8 +107433,8 @@ var require_RedefineSelection = __commonJS({
             a2 = [];
             max = 7;
             for (index = 0; index < 120; index++) {
-              test_1 = new test_selection_pb_1.Test();
-              test_1.setTestIdx(index);
+              test_2 = new test_selection_pb_1.Test();
+              test_2.setTestIdx(index);
               predictionData = new test_selection_pb_2.PredictionData();
               if (index < max) {
                 console.log("setting selected for index - ", index);
@@ -107409,7 +107443,7 @@ var require_RedefineSelection = __commonJS({
                 predictionData.setSelected(false);
               }
               testSelection.setPredictionData(predictionData);
-              testSelection.setTest(test_1);
+              testSelection.setTest(test_2);
               a2.push(testSelection);
             }
             testSelectionList.setTestSelectionsList(a2);
@@ -107690,187 +107724,171 @@ function redefinePlugin(on, cypressConfig) {
 exports.redefinePlugin = redefinePlugin;
 function registerPlugin(on, cypressConfig) {
   return __awaiter(this, void 0, void 0, function() {
-    var shouldRedefineRun, roadRunnerConfig, logger, invocationId, testRuns, startTime, timeToFirstFailure, coyote, redefineSelection, collect_only, redefine_output_path, collected_tests, selectedSpecPattern, error_2;
+    var shouldRedefineRun, roadRunnerConfig, logger, invocationId, testRuns, startTime, timeToFirstFailure, coyote, redefineSelection, collect_only, redefine_output_path, collected_tests, selectedSpecPattern;
     var _a;
     return __generator(this, function(_b) {
-      switch (_b.label) {
-        case 0:
-          shouldRedefineRun = true;
-          roadRunnerConfig = new RoadRunnerConfig_1.RoadRunnerConfig();
-          on("task", (_a = {}, _a["Should Stop"] = function() {
-            return new Promise(function(resolve, reject) {
-              if (collect_only) {
-                resolve(true);
-              }
-              if (!shouldRedefineRun) {
-                resolve(false);
-              }
-              if (shouldStop(roadRunnerConfig, redefineSelection)) {
-                resolve(true);
-              }
-              resolve(false);
-            });
-          }, _a));
-          logger = createLogger(roadRunnerConfig);
-          invocationId = roadRunnerConfig.generateInvocationId(logger);
-          if (invocationId == null) {
-            shouldRedefineRun = false;
-            return [2, cypressConfig];
-          }
-          (0, Logger_1.updateValue)(logger, "invocation_id", roadRunnerConfig.config.invocationId);
-          console.log("==== Redefine Run  ".concat(roadRunnerConfig.config.invocationId, " ===="));
-          console.log("==== Redefine is running in ".concat(roadRunnerConfig.selectionModeAsUserFacingString(), " mode ===="));
-          logger.info("Redefine is running in ".concat(roadRunnerConfig.selectionModeAsUserFacingString(), " mode"));
-          testRuns = [];
-          startTime = Date.now();
-          timeToFirstFailure = 0;
-          coyote = new CoyoteClient_1.CoyoteClient(roadRunnerConfig.config, logger);
-          redefineSelection = new RedefineSelection_1.RedefineSelection(roadRunnerConfig, coyote, logger);
-          collect_only = cypressConfig.env.collect_only;
-          redefine_output_path = cypressConfig.env.redefine_output_path;
-          collected_tests = [];
+      shouldRedefineRun = true;
+      roadRunnerConfig = new RoadRunnerConfig_1.RoadRunnerConfig();
+      on("task", (_a = {}, _a["Should Stop"] = function() {
+        return new Promise(function(resolve, reject) {
           if (collect_only) {
-            if (redefine_output_path == void 0) {
-              logger.error("redefine_output_path was not set when running in collect_only mode");
+            resolve(true);
+          }
+          if (!shouldRedefineRun) {
+            resolve(false);
+          }
+          if (shouldStop(roadRunnerConfig, redefineSelection)) {
+            resolve(true);
+          }
+          resolve(false);
+        });
+      }, _a));
+      logger = createLogger(roadRunnerConfig);
+      invocationId = roadRunnerConfig.generateInvocationId(logger);
+      if (invocationId == null) {
+        shouldRedefineRun = false;
+        return [2, cypressConfig];
+      }
+      (0, Logger_1.updateValue)(logger, "invocation_id", roadRunnerConfig.config.invocationId);
+      console.log("==== Redefine Run  ".concat(roadRunnerConfig.config.invocationId, " ===="));
+      console.log("==== Redefine is running in ".concat(roadRunnerConfig.selectionModeAsUserFacingString(), " mode ===="));
+      logger.info("Redefine is running in ".concat(roadRunnerConfig.selectionModeAsUserFacingString(), " mode"));
+      testRuns = [];
+      startTime = Date.now();
+      timeToFirstFailure = 0;
+      coyote = new CoyoteClient_1.CoyoteClient(roadRunnerConfig.config, logger);
+      redefineSelection = new RedefineSelection_1.RedefineSelection(roadRunnerConfig, coyote, logger);
+      collect_only = cypressConfig.env.collect_only;
+      redefine_output_path = cypressConfig.env.redefine_output_path;
+      collected_tests = [];
+      if (collect_only) {
+        if (redefine_output_path == void 0) {
+          logger.error("redefine_output_path was not set when running in collect_only mode");
+        }
+        shouldRedefineRun = false;
+        (0, Logger_1.updateValue)(logger, "collect_only", "true");
+      }
+      if (!coyote.successfulConnection) {
+        logger.error("Failed to connect to Coyote so redefine will not run");
+        shouldRedefineRun = false;
+      }
+      if (shouldRedefineRun) {
+        if (!roadRunnerConfig.isWorker()) {
+          try {
+            selectedSpecPattern = redefineSelection.brittTest(cypressConfig);
+            console.log("select test returned - ", selectedSpecPattern);
+            cypressConfig.specPattern = selectedSpecPattern;
+            if (roadRunnerConfig.config.dryRun) {
+              selectedSpecPattern.forEach(function(spec) {
+                return console.log(spec);
+              });
+              process.kill(process.ppid);
+              process.kill(process.pid);
             }
-            shouldRedefineRun = false;
-            (0, Logger_1.updateValue)(logger, "collect_only", "true");
-          }
-          if (!coyote.successfulConnection) {
-            logger.error("Failed to connect to Coyote so redefine will not run");
+          } catch (error) {
+            logger.error("Failed to select tests for redefine: ".concat(error.message));
             shouldRedefineRun = false;
           }
-          if (!shouldRedefineRun)
-            return [3, 7];
-          if (!!roadRunnerConfig.isWorker())
-            return [3, 5];
-          _b.label = 1;
-        case 1:
-          _b.trys.push([1, 3, , 4]);
-          return [4, redefineSelection.selectTests(cypressConfig)];
-        case 2:
-          selectedSpecPattern = _b.sent();
-          console.log("select test returned - ", selectedSpecPattern);
-          cypressConfig.specPattern = selectedSpecPattern;
-          if (roadRunnerConfig.config.dryRun) {
-            selectedSpecPattern.forEach(function(spec) {
-              return console.log(spec);
-            });
-            process.kill(process.ppid);
-            process.kill(process.pid);
-          }
-          return [3, 4];
-        case 3:
-          error_2 = _b.sent();
-          logger.error("Failed to select tests for redefine: ".concat(error_2.message));
-          shouldRedefineRun = false;
-          return [3, 4];
-        case 4:
-          return [3, 6];
-        case 5:
+        } else {
           logger.debug("worker mode, not sending GetTestSelectionRequest");
-          _b.label = 6;
-        case 6:
-          return [3, 8];
-        case 7:
-          logger.info("did not select tests because redefine should not run");
-          _b.label = 8;
-        case 8:
-          on("after:spec", function(spec, results) {
-            var _a2, _b2, _c;
-            if (collect_only) {
-              for (var _i = 0, _d = results.tests; _i < _d.length; _i++) {
-                var test = _d[_i];
-                collected_tests.push({
-                  testName: test.title,
-                  fileName: spec.relative
-                });
-              }
-              return;
-            }
-            if (shouldRedefineRun) {
-              if (results.stats.failures > 0 && timeToFirstFailure == 0) {
-                timeToFirstFailure = Date.now() - startTime;
-              }
-              if (roadRunnerConfig.isActive()) {
-                if (!redefineSelection.wasFallbackUsed()) {
-                  if (redefineSelection.selectedSpecs.has(spec.relative)) {
-                    redefineSelection.selectedSpecs.get(spec.relative).wasExecuted = true;
-                    if (results.failures > 0) {
-                      logger.debug("Spec ".concat(spec.relative, " has failures"));
-                      redefineSelection.selectedSpecs.get(spec.relative).wasFailure = true;
-                    }
-                  } else {
-                    logger.debug("Spec ".concat(spec.relative, " was not selected for testing"));
-                    return;
-                  }
-                } else {
-                  logger.debug("running in optimize mode and fallback strategy was used, not checking if spec was selected");
+        }
+      } else {
+        logger.info("did not select tests because redefine should not run");
+      }
+      on("after:spec", function(spec, results) {
+        var _a2, _b2, _c;
+        if (collect_only) {
+          for (var _i = 0, _d = results.tests; _i < _d.length; _i++) {
+            var test = _d[_i];
+            collected_tests.push({
+              testName: test.title,
+              fileName: spec.relative
+            });
+          }
+          return;
+        }
+        if (shouldRedefineRun) {
+          if (results.stats.failures > 0 && timeToFirstFailure == 0) {
+            timeToFirstFailure = Date.now() - startTime;
+          }
+          if (roadRunnerConfig.isActive()) {
+            if (!redefineSelection.wasFallbackUsed()) {
+              if (redefineSelection.selectedSpecs.has(spec.relative)) {
+                redefineSelection.selectedSpecs.get(spec.relative).wasExecuted = true;
+                if (results.failures > 0) {
+                  logger.debug("Spec ".concat(spec.relative, " has failures"));
+                  redefineSelection.selectedSpecs.get(spec.relative).wasFailure = true;
                 }
-              }
-              for (var _e = 0, _f = results.tests; _e < _f.length; _e++) {
-                var test = _f[_e];
-                if (redefineSelection.skippedTests.includes(test.title.join(" "))) {
-                  logger.debug("Test ".concat(test.title, " was skipped. all skips: ").concat(redefineSelection.skippedTests));
-                  continue;
-                }
-                for (var _g = 0, _h = test.attempts; _g < _h.length; _g++) {
-                  var attempt = _h[_g];
-                  var testDuration = (_c = (_b2 = (_a2 = attempt.timings) === null || _a2 === void 0 ? void 0 : _a2.test) === null || _b2 === void 0 ? void 0 : _b2.fnDuration) !== null && _c !== void 0 ? _c : 0;
-                  var hookFailure = attempt.failedFromHookId != null;
-                  var testResult = convertTestResult(test.state, hookFailure);
-                  if (testResult == test_runs_pb_1.TestResult.TEST_RESULT_UNSPECIFIED) {
-                    logger.error("Test result of ".concat(test.title, " is unspecified. state - ").concat(test.state));
-                  }
-                  var testFullName = test.title.join(" ");
-                  var testIdx = redefineSelection.getTestIdx(testFullName);
-                  var currentTest = dataBuilder.buildTest(test.title, spec.relative, testIdx);
-                  var testRun = dataBuilder.buildTestRun(currentTest, testDuration, testResult);
-                  testRuns.push(testRun);
-                }
-              }
-            }
-          });
-          on("after:run", function(results) {
-            if (collect_only) {
-              if (redefine_output_path == void 0) {
+              } else {
+                logger.debug("Spec ".concat(spec.relative, " was not selected for testing"));
                 return;
               }
-              try {
-                (0, fs_1.writeFileSync)(redefine_output_path, JSON.stringify({ tests: collected_tests }), {
-                  encoding: "utf8",
-                  flag: "wx"
-                });
-                logger.debug("Collection process collected ".concat(collected_tests.length, " tests"));
-              } catch (error) {
-                logger.error("Collection process failed writing collected tests - ".concat(error));
-              }
-              return;
-            }
-            if (shouldRedefineRun) {
-              console.log("==== Redefine Run ".concat(roadRunnerConfig.config.invocationId, " ===="));
-              console.log("==== For more information, check out https://app.redefine.dev ====");
-              if (roadRunnerConfig.isActive() && !redefineSelection.wasFallbackUsed()) {
-                if (redefineSelection.selectedKeysToArray().length == 0) {
-                  logger.error("no specs were selected for testing, although running in active and no fallback mode");
-                } else {
-                  console.log("==== Redefine selected ".concat(redefineSelection.selectedKeysToArray().length, " out of ").concat(redefineSelection.numSpecsCollected, " specs ===="));
-                }
-              }
-              var endTime = Date.now();
-              var cypressVersion = results.cypressVersion;
-              var request = dataBuilder.buildRecordTestResults(redefineSelection.initialTestCount, roadRunnerConfig.config, startTime, endTime, timeToFirstFailure, testRuns, cypressVersion, redefineSelection.fallbackStrategyUsed);
-              coyote.recordTestResults(request).then(function(response) {
-                logger.info("sent RecordTestResults successfully!");
-              }).catch(function(error) {
-                logger.error("Failed to send RecordTestResults: ".concat(error.message));
-              });
             } else {
-              logger.info("did not send RecordTestResults because redefine should not run");
+              logger.debug("running in optimize mode and fallback strategy was used, not checking if spec was selected");
             }
+          }
+          for (var _e = 0, _f = results.tests; _e < _f.length; _e++) {
+            var test = _f[_e];
+            if (redefineSelection.skippedTests.includes(test.title.join(" "))) {
+              logger.debug("Test ".concat(test.title, " was skipped. all skips: ").concat(redefineSelection.skippedTests));
+              continue;
+            }
+            for (var _g = 0, _h = test.attempts; _g < _h.length; _g++) {
+              var attempt = _h[_g];
+              var testDuration = (_c = (_b2 = (_a2 = attempt.timings) === null || _a2 === void 0 ? void 0 : _a2.test) === null || _b2 === void 0 ? void 0 : _b2.fnDuration) !== null && _c !== void 0 ? _c : 0;
+              var hookFailure = attempt.failedFromHookId != null;
+              var testResult = convertTestResult(test.state, hookFailure);
+              if (testResult == test_runs_pb_1.TestResult.TEST_RESULT_UNSPECIFIED) {
+                logger.error("Test result of ".concat(test.title, " is unspecified. state - ").concat(test.state));
+              }
+              var testFullName = test.title.join(" ");
+              var testIdx = redefineSelection.getTestIdx(testFullName);
+              var currentTest = dataBuilder.buildTest(test.title, spec.relative, testIdx);
+              var testRun = dataBuilder.buildTestRun(currentTest, testDuration, testResult);
+              testRuns.push(testRun);
+            }
+          }
+        }
+      });
+      on("after:run", function(results) {
+        if (collect_only) {
+          if (redefine_output_path == void 0) {
+            return;
+          }
+          try {
+            (0, fs_1.writeFileSync)(redefine_output_path, JSON.stringify({ tests: collected_tests }), {
+              encoding: "utf8",
+              flag: "wx"
+            });
+            logger.debug("Collection process collected ".concat(collected_tests.length, " tests"));
+          } catch (error) {
+            logger.error("Collection process failed writing collected tests - ".concat(error));
+          }
+          return;
+        }
+        if (shouldRedefineRun) {
+          console.log("==== Redefine Run ".concat(roadRunnerConfig.config.invocationId, " ===="));
+          console.log("==== For more information, check out https://app.redefine.dev ====");
+          if (roadRunnerConfig.isActive() && !redefineSelection.wasFallbackUsed()) {
+            if (redefineSelection.selectedKeysToArray().length == 0) {
+              logger.error("no specs were selected for testing, although running in active and no fallback mode");
+            } else {
+              console.log("==== Redefine selected ".concat(redefineSelection.selectedKeysToArray().length, " out of ").concat(redefineSelection.numSpecsCollected, " specs ===="));
+            }
+          }
+          var endTime = Date.now();
+          var cypressVersion = results.cypressVersion;
+          var request = dataBuilder.buildRecordTestResults(redefineSelection.initialTestCount, roadRunnerConfig.config, startTime, endTime, timeToFirstFailure, testRuns, cypressVersion, redefineSelection.fallbackStrategyUsed);
+          coyote.recordTestResults(request).then(function(response) {
+            logger.info("sent RecordTestResults successfully!");
+          }).catch(function(error) {
+            logger.error("Failed to send RecordTestResults: ".concat(error.message));
           });
-          return [2, cypressConfig];
-      }
+        } else {
+          logger.info("did not send RecordTestResults because redefine should not run");
+        }
+      });
+      return [2, cypressConfig];
     });
   });
 }
