@@ -82,7 +82,7 @@ jobs:
           redefine start --discover --cypress --verbose
           TIMESTAMP=$(date +%Y%m%d_%H%M%S)
           echo "Start Timestamp: $TIMESTAMP"
-          npx cypress run || true
+          npx cypress run -q || true
           TIMESTAMP=$(date +%Y%m%d_%H%M%S)
           echo "End Timestamp: $TIMESTAMP"
 
