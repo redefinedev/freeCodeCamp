@@ -80,7 +80,11 @@ jobs:
           redefine config set log_to_file=true
           redefine config set log_file_path="/tmp/redefine.log"
           redefine start --discover --cypress --verbose
+          TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+          echo "Start Timestamp: $TIMESTAMP"
           npx cypress run || true
+          TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+          echo "End Timestamp: $TIMESTAMP"
 
       - name: Seed Database
         run: pnpm run seed
