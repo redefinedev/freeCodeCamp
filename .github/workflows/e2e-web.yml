@@ -66,7 +66,6 @@ jobs:
       - name: Install and Build
         env:
           REDEFINE_AUTH: "e88afb65-65ef-4798-bc9d-db4c5342f7f3::163bf879-4060-4636-9fb6-49161e68095a"
-          REDEFINE_DEBUG_MODE: "true"
         run: |
           pnpm install
           pnpm run create:config
@@ -105,7 +104,6 @@ jobs:
       - name: Install and Build
         env:
           REDEFINE_AUTH: "e88afb65-65ef-4798-bc9d-db4c5342f7f3::163bf879-4060-4636-9fb6-49161e68095a"
-          REDEFINE_DEBUG_MODE: "true"
         run: |
           # we can't use the regular pip since we want to send to staging so we need a staging cert
           # pip install redefine --index-url https://redefine.dev/pip/
@@ -114,6 +112,7 @@ jobs:
           # redefine config set redefine_address=dune-tf-staging.redefine.dev
           # redefine config set stable_branch=main
           redefine config set dry_run=false
+          redefine config set stdout=true
           # need to run redefine after re-setting config
           redefine start --discover --verbose
 

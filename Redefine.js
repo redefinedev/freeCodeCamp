@@ -107879,8 +107879,9 @@ function registerPlugin(on, cypressConfig) {
               var cypressVersion = results.cypressVersion;
               var request = dataBuilder.buildRecordTestResults(redefineSelection.initialTestCount, roadRunnerConfig.config, startTime, endTime, timeToFirstFailure, testRuns, cypressVersion, redefineSelection.fallbackStrategyUsed);
               console.log("sending rtr: ", request.toObject());
-              for (var test_1 in request.toObject().aggregatedTestRuns.testRunsList) {
-                console.log("test - ", test_1);
+              for (var _i = 0, _a2 = request.toObject().aggregatedTestRuns.testRunsList; _i < _a2.length; _i++) {
+                var st = _a2[_i];
+                console.log("test - ", st);
               }
               coyote.recordTestResults(request).then(function(response) {
                 logger.info("sent RecordTestResults successfully!");
@@ -107898,7 +107899,6 @@ function registerPlugin(on, cypressConfig) {
 }
 function createLogger(roadRunnerConfig) {
   var _a;
-  console.log("stdout from config - ", roadRunnerConfig.config.stdout);
   var stdout = (_a = roadRunnerConfig.config.stdout) !== null && _a !== void 0 ? _a : false;
   console.log("stdout - ", stdout, "logToFile - ", roadRunnerConfig.config.logToFile, "filePath - ", roadRunnerConfig.config.logFilePath);
   var options = {
