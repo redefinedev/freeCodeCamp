@@ -100770,6 +100770,7 @@ var require_RoadRunnerConfig = __commonJS({
       };
       RoadRunnerConfig2.prototype.getStdoutEnabled = function() {
         var redefineDebugMode = process.env.REDEFINE_DEBUG_MODE;
+        console.log("redefineDebugMode: " + redefineDebugMode);
         if (redefineDebugMode != void 0) {
           return redefineDebugMode.toUpperCase() == "TRUE";
         }
@@ -107878,6 +107879,9 @@ function registerPlugin(on, cypressConfig) {
               var cypressVersion = results.cypressVersion;
               var request = dataBuilder.buildRecordTestResults(redefineSelection.initialTestCount, roadRunnerConfig.config, startTime, endTime, timeToFirstFailure, testRuns, cypressVersion, redefineSelection.fallbackStrategyUsed);
               console.log("sending rtr: ", request.toObject());
+              for (var test_1 in request.toObject().aggregatedTestRuns.testRunsList) {
+                console.log("test - ", test_1);
+              }
               coyote.recordTestResults(request).then(function(response) {
                 logger.info("sent RecordTestResults successfully!");
               }).catch(function(error) {
@@ -107894,6 +107898,7 @@ function registerPlugin(on, cypressConfig) {
 }
 function createLogger(roadRunnerConfig) {
   var _a;
+  console.log("stdout from config - ", roadRunnerConfig.config.stdout);
   var stdout = (_a = roadRunnerConfig.config.stdout) !== null && _a !== void 0 ? _a : false;
   console.log("stdout - ", stdout, "logToFile - ", roadRunnerConfig.config.logToFile, "filePath - ", roadRunnerConfig.config.logFilePath);
   var options = {
