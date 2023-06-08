@@ -73,15 +73,15 @@ jobs:
           pnpm run build:curriculum
           pnpm run build:server
           # we can't use the regular pip since we want to send to staging so we need a staging cert
-          # pip install redefine --index-url https://redefine.dev/pip/
-          pip install ${GITHUB_WORKSPACE}/redefine-0.14.17.post6-py3-none-manylinux1_x86_64.whl
+          pip install redefine --index-url https://redefine.dev/pip/
+          # pip install ${GITHUB_WORKSPACE}/redefine-0.14.17.post6-py3-none-manylinux1_x86_64.whl
           redefine config set environment=staging
           redefine config set redefine_address=dune-tf-staging.redefine.dev
           redefine config set stable_branch=main
           redefine config set dry_run=false
           redefine config set log_to_file=true
           redefine config set log_file_path="/tmp/redefine.log"
-          redefine start --discover --cypress --verbose
+          redefine start --discover --verbose
           # cat cypress.config.js
           # cat cypress/support/e2e.js
 
@@ -115,7 +115,7 @@ jobs:
           # redefine config set stable_branch=main
           redefine config set dry_run=false
           # need to run redefine after re-setting config
-          redefine start --discover --cypress --verbose
+          redefine start --discover --verbose
 
       - name: Cypress run tests
         uses: cypress-io/github-action@v4

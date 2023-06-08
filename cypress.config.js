@@ -38,7 +38,7 @@ module.exports = defineConfig({
       config.specPattern = "cypress/e2e/default/learn/challenges/backend.ts"
 
       config.env.API_LOCATION = 'http://localhost:3000';
-      config = await require('./Redefine.js')(on, config);
+      config = await require('./Redefine.js').redefinePlugin(on, config);
       return config;
     }
   }
