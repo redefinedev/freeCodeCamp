@@ -72,19 +72,6 @@ jobs:
           pnpm run create:config
           pnpm run build:curriculum
           pnpm run build:server
-          pip install ${GITHUB_WORKSPACE}/redefine-0.15.3.post8-py3-none-manylinux1_x86_64.whl
-          redefine config set environment=staging
-          redefine config set redefine_address=dune-tf-staging.redefine.dev
-          redefine config set stable_branch=main
-          redefine config set log_to_file=true
-          redefine config set log_file_path="/tmp/redefine.log"
-          redefine start --discover --cypress --verbose --dry-run --output-path=./output.txt
-          TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-          echo "Start Timestamp: $TIMESTAMP"
-          npx cypress run -q || true
-          TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-          echo "End Timestamp: $TIMESTAMP"
-          cat /home/runner/work/freeCodeCamp/freeCodeCamp/output.txt
 
       - name: Seed Database
         run: pnpm run seed
@@ -113,8 +100,15 @@ jobs:
           redefine config set environment=staging
           redefine config set redefine_address=dune-tf-staging.redefine.dev
           redefine config set stable_branch=main
-          # need to run redefine after re-setting config
-          redefine start --discover --cypress --verbose
+          redefine config set log_to_file=true
+          redefine config set log_file_path="/tmp/redefine.log"
+          redefine start --discover --cypress --verbose --dry-run --output-path=./output.txt
+          TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+          echo "Start Timestamp: $TIMESTAMP"
+          npx cypress run -q || true
+          TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+          echo "End Timestamp: $TIMESTAMP"
+          cat /home/runner/work/freeCodeCamp/freeCodeCamp/output.txt
 
       - name: Cypress run tests
         uses: cypress-io/github-action@v4
