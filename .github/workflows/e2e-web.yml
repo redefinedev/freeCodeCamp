@@ -122,6 +122,9 @@ jobs:
           browser: ${{ matrix.browsers }}
           # spec:  cypress/e2e/default/learn/challenges/code-storage.ts
     
+      - name: print selected tests
+        run: |
+          cat /home/runner/work/freeCodeCamp/freeCodeCamp/output.txt
 
       - name: print redefine logs
         run: |
