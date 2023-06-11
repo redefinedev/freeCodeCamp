@@ -78,7 +78,7 @@ jobs:
           redefine config set stable_branch=main
           redefine config set log_to_file=true
           redefine config set log_file_path="/tmp/redefine.log"
-          redefine start --discover --cypress --verbose --dry-run --output_path=./output.txt
+          redefine start --discover --cypress --verbose --dry-run --output-path=./output.txt
           TIMESTAMP=$(date +%Y%m%d_%H%M%S)
           echo "Start Timestamp: $TIMESTAMP"
           npx cypress run -q || true
