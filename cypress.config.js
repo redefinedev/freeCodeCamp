@@ -4,7 +4,6 @@ const { defineConfig } = require('cypress');
 
 module.exports = defineConfig({
   e2e: {
-    //baseUrl: 'http://localhost:8000',
     projectId: 'ke77ns',
     retries: 4,
     chromeWebSecurity: false,
@@ -36,7 +35,7 @@ module.exports = defineConfig({
       });
       // console.log("cypress spec pattern: ", config.specPattern)
 
-      config.env.API_LOCATION = 'http://localhost:3000';
+      // config.env.API_LOCATION = 'http://localhost:3000';
       return config;
     }
   }
