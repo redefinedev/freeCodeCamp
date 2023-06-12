@@ -28,6 +28,8 @@ module.exports = defineConfig({
     ],
 
     async setupNodeEvents(on, config) {
+      console.log(JSON.stringify(config, null, 2));
+      console.log(process.pid)
       config.env = config.env || {};
       // on('before:run', () => {
       //   if (!existsSync('./config/curriculum.json')) {
