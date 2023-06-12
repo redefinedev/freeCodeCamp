@@ -73,8 +73,8 @@ jobs:
         # pnpm run build:curriculum
         # pnpm run build:server
 
-      - name: Seed Database
-        run: pnpm run seed
+      # - name: Seed Database
+      #   run: pnpm run seed
 
 
         
