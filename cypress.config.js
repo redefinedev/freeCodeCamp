@@ -4,6 +4,7 @@ const { defineConfig } = require('cypress');
 
 module.exports = defineConfig({
   e2e: {
+    baseUrl: null,
     projectId: 'ke77ns',
     retries: 4,
     chromeWebSecurity: false,
