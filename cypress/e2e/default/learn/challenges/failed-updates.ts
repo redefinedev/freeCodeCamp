@@ -21,6 +21,7 @@ function getCompletedIds(completedChallenges: ChallengeData[]): string[] {
 
 describe('failed update flushing', function () {
   before(() => {
+    console.log("in before hook!!!");
     throw new Error("test fails here")
   });
 

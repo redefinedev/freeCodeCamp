@@ -1,5 +1,6 @@
 describe('Add Portfolio Item', () => {
   before(() => {
+    console.log("in before hook!!!");
     cy.login();
   });
 

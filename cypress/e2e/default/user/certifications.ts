@@ -1,6 +1,7 @@
 describe('Public profile certifications', () => {
   context('Signed in user viewing their own public profile', () => {
     before(() => {
+    console.log("in before hook!!!");
       cy.exec('pnpm run seed:certified-user');
     });
 

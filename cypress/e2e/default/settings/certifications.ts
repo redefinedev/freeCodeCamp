@@ -3,6 +3,7 @@ import '@testing-library/cypress/add-commands';
 describe('Settings certifications area', () => {
   describe('initially', () => {
     before(() => {
+    console.log("in before hook!!!");
       cy.exec('pnpm run seed');
       cy.login();
     });
@@ -23,6 +24,7 @@ describe('Settings certifications area', () => {
 
   describe('after isHonest', () => {
     before(() => {
+    console.log("in before hook!!!");
       cy.exec('pnpm run seed');
       cy.login();
     });

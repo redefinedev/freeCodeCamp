@@ -5,6 +5,7 @@ const location =
 
 describe('Challenge with editor', function () {
   before(() => {
+    console.log("in before hook!!!");
     cy.visit(location);
   });
 

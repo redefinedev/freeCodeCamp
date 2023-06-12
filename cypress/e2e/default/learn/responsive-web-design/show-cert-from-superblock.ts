@@ -29,6 +29,7 @@ const projects = {
 
 describe('Front End Development Libraries Superblock', () => {
   before(() => {
+    console.log("in before hook!!!");
     cy.exec('pnpm run seed');
     cy.login();
     cy.visit('/learn/front-end-development-libraries');
@@ -41,6 +42,7 @@ describe('Front End Development Libraries Superblock', () => {
   });
   describe('After submitting all 5 projects', () => {
     before(() => {
+    console.log("in before hook!!!");
       cy.exec('pnpm run seed');
       cy.login();
       cy.visit('/settings');

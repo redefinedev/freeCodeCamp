@@ -64,6 +64,7 @@ describe('Classic challenge', function () {
 
 describe('jQuery challenge', function () {
   before(() => {
+    console.log("in before hook!!!");
     cy.visit(outputLocations.jQuery);
   });
 

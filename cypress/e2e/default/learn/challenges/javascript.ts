@@ -5,6 +5,7 @@ describe('JavaScript challenges', function () {
     '/learn/javascript-algorithms-and-data-structures/basic-javascript/comment-your-javascript-code';
 
   before(() => {
+    console.log("in before hook!!!");
     cy.visit(location);
   });
 

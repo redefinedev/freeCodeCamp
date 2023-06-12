@@ -20,6 +20,7 @@ const scripts = {
 describe('The Document Metadata', () => {
   describe('landing page', () => {
     before(() => {
+    console.log("in before hook!!!");
       cy.visit('/');
     });
 
