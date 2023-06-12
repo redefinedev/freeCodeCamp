@@ -29,11 +29,11 @@ module.exports = defineConfig({
 
     async setupNodeEvents(on, config) {
       config.env = config.env || {};
-      on('before:run', () => {
-        if (!existsSync('./config/curriculum.json')) {
-          execSync('pnpm run build:curriculum');
-        }
-      });
+      // on('before:run', () => {
+      //   if (!existsSync('./config/curriculum.json')) {
+      //     execSync('pnpm run build:curriculum');
+      //   }
+      // });
       // console.log("cypress spec pattern: ", config.specPattern)
 
       config.env.API_LOCATION = 'http://localhost:3000';
