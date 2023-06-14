@@ -9,6 +9,8 @@ on:
   workflow_dispatch:
 
 jobs:
+  env:
+    REDEFINE_SESSION_ID: ""
   cypress-run:
     name: Test
     runs-on: ubuntu-20.04
@@ -82,9 +84,8 @@ jobs:
           redefine config set stable_branch=main
           redefine config set log_to_file=true
           redefine config set log_file_path="/tmp/redefine.log"
-          export REDEFINE_SESSION_ID=$(redefine get session_id)
-          # redefine config set dry_run=true
-          # redefine config set prediction_output_path=./output.txt
+          env.REDEFINE_SESSION_ID=$(redefine get session_id)
+          export REDEFINE_SESSION_ID=env.REDEFINE_SESSION_ID
           redefine start --discover --cypress --verbose --dry-run --output-path=./output.txt
 
 
@@ -107,6 +108,7 @@ jobs:
           redefine config set stable_branch=main
           redefine config set log_to_file=true
           redefine config set log_file_path="/tmp/redefine.log"
+          export REDEFINE_SESSION_ID=env.REDEFINE_SESSION_ID
           redefine start --worker --cypress --verbose
       
       - name: FCC setup
@@ -125,9 +127,11 @@ jobs:
         uses: cypress-io/github-action@v4
         with:
           record: ${{ env.CYPRESS_RECORD_KEY != 0 }}
-          env:  REDEFINE_AUTH=e88afb65-65ef-4798-bc9d-db4c5342f7f3::163bf879-4060-4636-9fb6-49161e68095a
+          env:  
+            REDEFINE_AUTH=e88afb65-65ef-4798-bc9d-db4c5342f7f3::163bf879-4060-4636-9fb6-49161e68095a
+            REDEFINE_SESSION_ID=$REDEFINE_SESSION_ID
           quiet:  true
-          start: pnpm run start-ci
+          command: export REDEFINE_SESSION_ID=env.REDEFINE_SESSION_ID && pnpm run start-ci
           wait-on: http://localhost:8000
           wait-on-timeout: 1200
           config: baseUrl=http://localhost:8000
