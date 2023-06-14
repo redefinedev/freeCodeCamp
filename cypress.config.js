@@ -4,7 +4,7 @@ const { defineConfig } = require('cypress');
 
 module.exports = defineConfig({
   e2e: {
-    baseUrl: null,
+    baseUrl: 'http://localhost:8000',
     projectId: 'ke77ns',
     retries: 4,
     chromeWebSecurity: false,
@@ -18,8 +18,7 @@ module.exports = defineConfig({
     // pnpm run cypress:dev:run -- --spec "cypress/e2e/third-party/**/*"
     //
     // and so on.
-    //
-    specPattern: ['cypress/e2e/default/**/*.js', 'cypress/e2e/default/**/*.ts'],
+    // specPattern: ['cypress/e2e/default/**/*.js', 'cypress/e2e/default/**/*.ts'],
 
     // Temporary disable these until we can address the flakiness
     excludeSpecPattern: [
@@ -29,15 +28,14 @@ module.exports = defineConfig({
 
     async setupNodeEvents(on, config) {
       config.env = config.env || {};
-      // on('before:run', () => {
-      //   if (!existsSync('./config/curriculum.json')) {
-      //     execSync('pnpm run build:curriculum');
-      //   }
-      // });
-      // console.log("cypress spec pattern: ", config.specPattern)
+      on('before:run', () => {
+        if (!existsSync('./config/curriculum.json')) {
+          execSync('pnpm run build:curriculum');
+        }
+      });
 
       config.env.API_LOCATION = 'http://localhost:3000';
       return config;
-    }
-  }
+    },  
+  },
 });
