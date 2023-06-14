@@ -106,6 +106,7 @@ jobs:
           wait-on-timeout: 1200
           config: baseUrl=http://localhost:8000
           browser: ${{ matrix.browsers }}
+          spec: cypress/e2e/default/settings/scrollbar-width.ts
 
       - name: print redefine logs
         run: |
