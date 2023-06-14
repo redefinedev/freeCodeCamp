@@ -102,9 +102,43 @@ jobs:
           redefine config set stable_branch=main
           redefine config set log_to_file=true
           redefine config set log_file_path="/tmp/redefine.log"
+          export REDEFINE_SESSION_ID=$(redefine get session_id)
           # redefine config set dry_run=true
           # redefine config set prediction_output_path=./output.txt
           redefine start --discover --cypress --verbose --dry-run --output-path=./output.txt
+        # TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+        # echo "Start Timestamp: $TIMESTAMP"
+        # npx cypress run -q || true
+        # TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+        # echo "End Timestamp: $TIMESTAMP"
+        # cat /home/runner/work/freeCodeCamp/freeCodeCamp/output.txt
+
+      - name: Cypress dry-run
+        uses: cypress-io/github-action@v4
+        with:
+          record: ${{ env.CYPRESS_RECORD_KEY != 0 }}
+          env:  REDEFINE_AUTH=e88afb65-65ef-4798-bc9d-db4c5342f7f3::163bf879-4060-4636-9fb6-49161e68095a
+          quiet:  true
+          command: npx cypress run
+          # start: pnpm run start-ci
+          # wait-on: http://localhost:8000
+          # wait-on-timeout: 1200
+          # config: baseUrl=http://localhost:8000
+          # browser: ${{ matrix.browsers }}
+          # spec:  cypress/e2e/default/learn/challenges/code-storage.ts
+
+      - name: Re-Configure Redefine
+        env:
+          REDEFINE_AUTH: "e88afb65-65ef-4798-bc9d-db4c5342f7f3::163bf879-4060-4636-9fb6-49161e68095a"
+        run: |
+          # we can't use the regular pip since we want to send to staging so we need a staging cert
+          # pip install redefine --index-url https://redefine.dev/pip/
+          redefine config set environment=staging
+          redefine config set redefine_address=dune-tf-staging.redefine.dev
+          redefine config set stable_branch=main
+          redefine config set log_to_file=true
+          redefine config set log_file_path="/tmp/redefine.log"
+          redefine start --worker --cypress --verbose
         # TIMESTAMP=$(date +%Y%m%d_%H%M%S)
         # echo "Start Timestamp: $TIMESTAMP"
         # npx cypress run -q || true
