@@ -2,6 +2,7 @@ const certifiedUser = '/certification/certifieduser/responsive-web-design';
 
 describe('A certification,', function () {
   before(() => {
+    console.log("in before hook!!!");
     cy.exec('pnpm run seed:certified-user');
   });
 
@@ -38,6 +39,7 @@ describe('A certification,', function () {
 
   describe("while viewing someone else's,", function () {
     before(() => {
+    console.log("in before hook!!!");
       cy.visit(certifiedUser);
     });
 

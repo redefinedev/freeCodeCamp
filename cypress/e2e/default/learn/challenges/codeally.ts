@@ -1,6 +1,7 @@
 describe('CodeAlly cert challenge', function () {
   describe('before completing the project', function () {
     before(() => {
+    console.log("in before hook!!!");
       cy.exec('pnpm run seed');
       cy.login();
       cy.visit(
@@ -19,6 +20,7 @@ describe('CodeAlly cert challenge', function () {
 
   describe('after completing the project', function () {
     before(() => {
+    console.log("in before hook!!!");
       cy.exec('pnpm run seed:certified-user');
       cy.login();
       cy.visit(

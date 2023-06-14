@@ -14,6 +14,7 @@ const clear = () => {
 
 describe('Search bar optimized', () => {
   before(() => {
+    console.log("in before hook!!!");
     cy.visit('/');
   });
 
@@ -46,6 +47,7 @@ describe('Search bar optimized', () => {
 
 describe('Search bar', () => {
   before(() => {
+    console.log("in before hook!!!");
     cy.visit('/learn');
   });
 

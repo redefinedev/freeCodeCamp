@@ -4,6 +4,7 @@ const introPageSelectors = {
 
 describe('Certification intro page', () => {
   before(() => {
+    console.log("in before hook!!!");
     cy.exec('pnpm run seed');
     cy.login();
   });

@@ -14,6 +14,7 @@ const getIframeBody = () => {
 
 describe('Sass Challenge', () => {
   before(() => {
+    console.log("in before hook!!!");
     cy.visit(sassPathLocation);
     cy.wait(5000);
   });

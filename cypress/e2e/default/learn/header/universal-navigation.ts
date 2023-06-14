@@ -45,6 +45,7 @@ describe('Default Navigation Menu', () => {
 
 describe('Authenticated Navigation Menu', () => {
   before(() => {
+    console.log("in before hook!!!");
     cy.clearCookies();
     cy.exec('pnpm run seed');
     cy.login();
@@ -67,6 +68,7 @@ describe('Authenticated Navigation Menu', () => {
 
 describe('Authenticated User Sign Out', () => {
   before(() => {
+    console.log("in before hook!!!");
     cy.clearCookies();
     cy.exec('pnpm run seed');
   });
@@ -93,6 +95,7 @@ describe('Authenticated User Sign Out', () => {
 
 describe('Donor Navigation Menu', () => {
   before(() => {
+    console.log("in before hook!!!");
     cy.clearCookies();
     cy.exec('pnpm run seed -- --donor');
     cy.login();

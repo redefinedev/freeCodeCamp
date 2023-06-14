@@ -1,5 +1,6 @@
 describe('Settings', () => {
   before(() => {
+    console.log("in before hook!!!");
     cy.login();
   });
   it('should be possible to reset your progress', () => {
