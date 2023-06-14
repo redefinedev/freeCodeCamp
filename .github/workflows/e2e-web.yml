@@ -8,9 +8,6 @@ on:
       - 'next-**'
   workflow_dispatch:
 
-env:
-    REDEFINE_SESSION_ID: ""
-
 jobs:
   cypress-run:
     name: Test
