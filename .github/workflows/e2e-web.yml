@@ -8,9 +8,10 @@ on:
       - 'next-**'
   workflow_dispatch:
 
-jobs:
-  env:
+env:
     REDEFINE_SESSION_ID: ""
+
+jobs:
   cypress-run:
     name: Test
     runs-on: ubuntu-20.04
