@@ -63,10 +63,7 @@ jobs:
       - name: Set freeCodeCamp Environment Variables
         run: cp sample.env .env
 
-      - name: npm install
-        env:
-          REDEFINE_AUTH: "e88afb65-65ef-4798-bc9d-db4c5342f7f3::163bf879-4060-4636-9fb6-49161e68095a"
-          REDEFINE_DEBUG_MODE: "true"
+      - name: Install and Build
         run: |
           pnpm install
           pnpm run create:config
@@ -76,23 +73,21 @@ jobs:
       - name: Seed Database
         run: pnpm run seed
       
-      - name: Install Redefine
+      - name: Install and Build Redefine
         id: redefine
         env:
           REDEFINE_AUTH: "e88afb65-65ef-4798-bc9d-db4c5342f7f3::163bf879-4060-4636-9fb6-49161e68095a"
         run: |
-          # we can't use the regular pip since we want to send to staging so we need a staging cert
-          # pip install redefine --index-url https://redefine.dev/pip/
-          pip install ${GITHUB_WORKSPACE}/redefine-0.16.1-py3-none-manylinux1_x86_64.whl
+          pip install redefine --index-url https://redefine.dev/staging/pip/
           redefine config set environment=staging
           redefine config set redefine_address=dune-tf-staging.redefine.dev
           redefine config set stable_branch=main
+          redefine config set dry_run=false
           redefine config set log_to_file=true
-          redefine config set log_file_path="/tmp/redefine.log"
           export REDEFINE_SESSION_ID=$(redefine get session_id) 
           echo "REDEFINE_SESSION_ID=$REDEFINE_SESSION_ID" >> $GITHUB_OUTPUT
+          # need to run redefine after setting config
           redefine start --worker --cypress --verbose
-
 
       - name: Cypress run tests
         uses: cypress-io/github-action@v4
