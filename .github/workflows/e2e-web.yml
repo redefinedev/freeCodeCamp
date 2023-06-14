@@ -64,50 +64,27 @@ jobs:
         run: cp sample.env .env
 
       - name: Install and Build
-        env:
-          REDEFINE_AUTH: "e88afb65-65ef-4798-bc9d-db4c5342f7f3::163bf879-4060-4636-9fb6-49161e68095a"
         run: |
           pnpm install
           pnpm run create:config
           pnpm run build:curriculum
           pnpm run build:server
-          pip install redefine --index-url https://redefine.dev/staging/pip/
-          redefine config set environment=staging
-          redefine config set redefine_address=dune-tf-staging.redefine.dev
-          redefine config set stable_branch=main
-          redefine config set dry_run=true
-          redefine start --discover --cypress --verbose
-          # cat cypress.config.js
-          # cat cypress/support/e2e.js
-
-          npx cypress run || true
 
       - name: Seed Database
         run: pnpm run seed
-
-      - name: Cypress run dry run
-        uses: cypress-io/github-action@v4
-        with:
-          record: ${{ env.CYPRESS_RECORD_KEY != 0 }}
-          env:  REDEFINE_AUTH=e88afb65-65ef-4798-bc9d-db4c5342f7f3::163bf879-4060-4636-9fb6-49161e68095a
-          start: pnpm run start-ci
-          wait-on: http://localhost:8000
-          wait-on-timeout: 1200
-          config: baseUrl=http://localhost:8000
-          browser: ${{ matrix.browsers }}
-          # spec:  cypress/e2e/default/learn/challenges/code-storage.ts
       
-      - name: Install and Build
+      - name: Install and Build Redefine
         env:
           REDEFINE_AUTH: "e88afb65-65ef-4798-bc9d-db4c5342f7f3::163bf879-4060-4636-9fb6-49161e68095a"
         run: |
           pip install redefine --index-url https://redefine.dev/staging/pip/
-          # redefine config set environment=staging
-          # redefine config set redefine_address=dune-tf-staging.redefine.dev
-          # redefine config set stable_branch=main
+          redefine config set environment=staging
+          redefine config set redefine_address=dune-tf-staging.redefine.dev
+          redefine config set stable_branch=main
           redefine config set dry_run=false
-          # need to run redefine after re-setting config
-          redefine start --discover --cypress --verbose
+          redefine config set log_to_file=true
+          # need to run redefine after setting config
+          redefine start --prioritize --cypress --verbose
 
       - name: Cypress run tests
         uses: cypress-io/github-action@v4
