@@ -69,12 +69,12 @@ jobs:
           REDEFINE_DEBUG_MODE: "true"
         run: |
           pnpm install
-        # pnpm run create:config
-        # pnpm run build:curriculum
-        # pnpm run build:server
+          pnpm run create:config
+          pnpm run build:curriculum
+          pnpm run build:server
 
-      # - name: Seed Database
-      #   run: pnpm run seed
+      - name: Seed Database
+        run: pnpm run seed
 
 
         
