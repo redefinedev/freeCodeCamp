@@ -1,7 +1,3 @@
-// ** This code below has been Redefine.dev **
-require("./Hook.js").hookPlugin(Cypress);
-// ** End of code added by Redefine.dev **
-// ** End of code added by Redefine.dev **
 // ***********************************************************
 // This example support/index.js is processed and
 // loaded automatically before your test files.

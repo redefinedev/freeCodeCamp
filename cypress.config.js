@@ -39,10 +39,7 @@ module.exports = defineConfig({
 
       config.env.API_LOCATION = 'http://localhost:3000';
       
-// ** This code below has been Redefine.dev **
-config = await require("./Redefine.js").redefinePlugin(on, config);
-// ** End of code added by Redefine.dev **
-return config;
+      return config;
     },  
   },
 });
