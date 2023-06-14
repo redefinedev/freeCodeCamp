@@ -29,9 +29,6 @@ module.exports = defineConfig({
     async setupNodeEvents(on, config) {
       config.env = config.env || {};
       on('before:run', () => {
-        Cypress.defineConfig({
-          e2e: config
-        });
         if (!existsSync('./config/curriculum.json')) {
           execSync('pnpm run build:curriculum');
         }
