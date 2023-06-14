@@ -77,6 +77,7 @@ jobs:
         run: pnpm run seed
       
       - name: Install Redefine
+        id: redefine
         env:
           REDEFINE_AUTH: "e88afb65-65ef-4798-bc9d-db4c5342f7f3::163bf879-4060-4636-9fb6-49161e68095a"
         run: |
@@ -88,15 +89,19 @@ jobs:
           redefine config set stable_branch=main
           redefine config set log_to_file=true
           redefine config set log_file_path="/tmp/redefine.log"
-          redefine start --prioritize --cypress --verbose
+          export REDEFINE_SESSION_ID=$(redefine get session_id) 
+          echo "REDEFINE_SESSION_ID=$REDEFINE_SESSION_ID" >> $GITHUB_OUTPUT
+          redefine start --worker --cypress --verbose
 
 
       - name: Cypress run tests
         uses: cypress-io/github-action@v4
         with:
           record: ${{ env.CYPRESS_RECORD_KEY != 0 }}
-          env:  REDEFINE_AUTH=e88afb65-65ef-4798-bc9d-db4c5342f7f3::163bf879-4060-4636-9fb6-49161e68095a
-          start: pnpm run start-ci
+          env:  
+            REDEFINE_AUTH=e88afb65-65ef-4798-bc9d-db4c5342f7f3::163bf879-4060-4636-9fb6-49161e68095a
+            REDEFINE_SESSION_ID=${{ steps.redefine.outputs.REDEFINE_SESSION_ID }}
+          start: export REDEFINE_SESSION_ID=${{ steps.redefine.outputs.REDEFINE_SESSION_ID }} && pnpm run start-ci
           wait-on: http://localhost:8000
           wait-on-timeout: 1200
           config: baseUrl=http://localhost:8000
