@@ -21,8 +21,8 @@ function getCompletedIds(completedChallenges: ChallengeData[]): string[] {
 
 describe('failed update flushing', function () {
   before(() => {
-    cy.exec('pnpm run seed');
-    cy.login();
+    console.log("in before hook!!!");
+    throw new Error("test fails here")
   });
 
   beforeEach(() => {

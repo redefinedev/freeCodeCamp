@@ -1,5 +1,6 @@
 describe('Donate page', () => {
   before(() => {
+    console.log("in before hook!!!");
     cy.clearCookies();
     cy.exec('pnpm run seed');
     cy.login();

@@ -10,6 +10,7 @@ const editorElements = {
 
 describe('multifileCertProjects', function () {
   before(() => {
+    console.log("in before hook!!!");
     cy.exec('pnpm run seed');
     cy.login();
   });

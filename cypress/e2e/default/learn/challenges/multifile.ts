@@ -12,6 +12,7 @@ const selectors = {
 
 describe('Challenge with multifile editor', () => {
   before(() => {
+    console.log("in before hook!!!");
     cy.visit(location);
   });
 

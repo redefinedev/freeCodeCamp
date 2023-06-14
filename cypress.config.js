@@ -18,7 +18,6 @@ module.exports = defineConfig({
     // pnpm run cypress:dev:run -- --spec "cypress/e2e/third-party/**/*"
     //
     // and so on.
-    //
     specPattern: ['cypress/e2e/default/**/*.js', 'cypress/e2e/default/**/*.ts'],
 
     // Temporary disable these until we can address the flakiness
@@ -30,14 +29,17 @@ module.exports = defineConfig({
     async setupNodeEvents(on, config) {
       config.env = config.env || {};
       on('before:run', () => {
+        Cypress.defineConfig({
+          e2e: config
+        });
         if (!existsSync('./config/curriculum.json')) {
           execSync('pnpm run build:curriculum');
         }
       });
-      // console.log("cypress spec pattern: ", config.specPattern)
 
       config.env.API_LOCATION = 'http://localhost:3000';
+      
       return config;
-    }
-  }
+    },  
+  },
 });
