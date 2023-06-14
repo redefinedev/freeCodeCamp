@@ -96,15 +96,15 @@ jobs:
         run: |
           # we can't use the regular pip since we want to send to staging so we need a staging cert
           # pip install redefine --index-url https://redefine.dev/pip/
-          pip install ${GITHUB_WORKSPACE}/redefine-0.15.5.post4-py3-none-manylinux1_x86_64.whl
-          redefine config set environment=staging
-          redefine config set redefine_address=dune-tf-staging.redefine.dev
-          redefine config set stable_branch=main
-          redefine config set log_to_file=true
-          redefine config set log_file_path="/tmp/redefine.log"
-          redefine config set dry_run=true
-          redefine set prediction_output_path=./output.txt
-          redefine start --discover --cypress --verbose --dry-run --output-path=./output.txt
+        # pip install ${GITHUB_WORKSPACE}/redefine-0.15.5.post4-py3-none-manylinux1_x86_64.whl
+        # redefine config set environment=staging
+        # redefine config set redefine_address=dune-tf-staging.redefine.dev
+        # redefine config set stable_branch=main
+        # redefine config set log_to_file=true
+        # redefine config set log_file_path="/tmp/redefine.log"
+        # redefine config set dry_run=true
+        # redefine set prediction_output_path=./output.txt
+        # redefine start --discover --cypress --verbose --dry-run --output-path=./output.txt
         # TIMESTAMP=$(date +%Y%m%d_%H%M%S)
         # echo "Start Timestamp: $TIMESTAMP"
         # npx cypress run -q || true
