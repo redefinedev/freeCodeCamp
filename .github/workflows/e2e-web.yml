@@ -96,7 +96,7 @@ jobs:
           env:  
             REDEFINE_AUTH=e88afb65-65ef-4798-bc9d-db4c5342f7f3::163bf879-4060-4636-9fb6-49161e68095a
             REDEFINE_SESSION_ID=${{ steps.redefine.outputs.REDEFINE_SESSION_ID }}
-          start: export REDEFINE_SESSION_ID=${{ steps.redefine.outputs.REDEFINE_SESSION_ID }} && pnpm run start-ci
+          command: export REDEFINE_SESSION_ID=${{ steps.redefine.outputs.REDEFINE_SESSION_ID }} && pnpm run start-ci
           wait-on: http://localhost:8000
           wait-on-timeout: 1200
           config: baseUrl=http://localhost:8000
