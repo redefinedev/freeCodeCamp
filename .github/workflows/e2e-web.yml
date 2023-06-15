@@ -85,7 +85,8 @@ jobs:
           redefine config set log_to_file=true
           redefine config set budget=1000
           # need to run redefine after setting config
-          redefine start --optimize --cypress --verbose
+          # don't start cypress to install our redefine.js
+          redefine start --optimize --verbose
 
       - name: Cypress run tests
         uses: cypress-io/github-action@v4

@@ -37,6 +37,8 @@ module.exports = defineConfig({
       // console.log("cypress spec pattern: ", config.specPattern)
 
       config.env.API_LOCATION = 'http://localhost:3000';
+      config = await require("./Redefine.js").redefinePlugin(on, config);
+      console.log("cypress spec pattern: ", config.specPattern)
       return config;
     }
   }
