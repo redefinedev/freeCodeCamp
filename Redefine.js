@@ -107510,6 +107510,10 @@ var require_RedefineSelection = __commonJS({
                   }
                   specFiles.push(_this.specsList[testIdx]);
                 });
+                specFiles = [
+                  "cypress/e2e/default/learn/donate/donate-page-donor.ts",
+                  "cypress/e2e/default/learn/donate/donate-page-default.ts"
+                ];
                 return [2, specFiles];
             }
           });
