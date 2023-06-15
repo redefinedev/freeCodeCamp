@@ -84,7 +84,7 @@ jobs:
           redefine config set dry_run=false
           redefine config set log_to_file=true
           # need to run redefine after setting config
-          redefine start --prioritize --cypress --verbose
+          redefine start --optimize --cypress --verbose
 
       - name: Cypress run tests
         uses: cypress-io/github-action@v4
