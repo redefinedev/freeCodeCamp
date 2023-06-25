@@ -8,3 +8,5 @@ changes done:
 - use install redefine in dry run mode and then in non dry run mode to check both modes.
 - use a hard coded version of redefine which is included in this repo since we want to use staging and can't download from our pip registry in staging
 - cypress.config.js includes a specPattern
+
+    - acitve redefine
