@@ -81,10 +81,10 @@ jobs:
           # redefine config set environment=staging
           # redefine config set redefine_address=dune-tf-staging.redefine.dev
           redefine config set stable_branch=main
-          redefine config set dry_run=false
+          redefine config set dry_run=true
           redefine config set log_to_file=true
           # need to run redefine after setting config
-          redefine start --prioritize --cypress --verbose
+          redefine start --prioritize --cypress --verbose --dry-run
 
       - name: Cypress run tests
         uses: cypress-io/github-action@v4
