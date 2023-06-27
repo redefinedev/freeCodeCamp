@@ -84,7 +84,7 @@ jobs:
           redefine config set dry_run=false
           redefine config set log_to_file=true
           # need to run redefine after setting config
-          redefine start --prioritize --cypress --verbose
+          redefine start --prioritize --cypress --verbose --dry-run --output-path=/tmp/specs.txt
 
       - name: Cypress run tests
         uses: cypress-io/github-action@v4
@@ -105,4 +105,6 @@ jobs:
           cat /tmp/redefine_daemon.log || true
           echo "Redefine plugin Log"
           cat "/tmp/redefine_plugin.log" || true
+          echo "specs: "
+          cat "/tmp/specs.txt" || true
            
