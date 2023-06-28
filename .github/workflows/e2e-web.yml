@@ -87,7 +87,7 @@ jobs:
           redefine config set selection_method=2 # one of these should be correct
           redefine config set static_prediction=false
           # need to run redefine after setting config
-          redefine start --prioritize --cypress --verbose
+          redefine start --optimize --cypress --verbose
 
       - name: Cypress run tests
         uses: cypress-io/github-action@v4
