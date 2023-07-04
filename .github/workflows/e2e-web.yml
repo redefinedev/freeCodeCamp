@@ -86,6 +86,7 @@ jobs:
           redefine config set dry_run=true
           redefine config set log_to_file=true
 
+          redefine config set time_limit=20
           redefine config set selection_method=2 # one of these should be correct
           redefine config set static_prediction=false
 
