@@ -92,7 +92,7 @@ jobs:
           redefine config set static_prediction=false
 
           # need to run redefine after setting config
-          redefine start --worker --cypress --verbose
+          redefine start --optimize --cypress --verbose
 
       - name: Cypress run tests
         uses: cypress-io/github-action@v4
