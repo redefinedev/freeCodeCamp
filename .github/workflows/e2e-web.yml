@@ -136,23 +136,23 @@ jobs:
           # need to run redefine after setting config,  no need to reinstall cypress
           redefine start --worker --verbose
 
-      - name: Get session check
-        id: session_check1
-        env:
-          REDEFINE_AUTH: 'e88afb65-65ef-4798-bc9d-db4c5342f7f3::163bf879-4060-4636-9fb6-49161e68095a'
-          REDEFINE_ENVIRONMENT: 'staging'
-          REDEFINE_SESSION_ID: ${{ steps.dry_run.outputs.session_id }}
-        run: |
-          if `redefine get session_check --verbose`; then
-            echo "session is still running!"
-            echo "status=0" >> $GITHUB_OUTPUT
-          else 
-            echo "status=1" >> $GITHUB_OUTPUT
-          fi
+      # - name: Get session check
+      #   id: session_check1
+      #   env:
+      #     REDEFINE_AUTH: 'e88afb65-65ef-4798-bc9d-db4c5342f7f3::163bf879-4060-4636-9fb6-49161e68095a'
+      #     REDEFINE_ENVIRONMENT: 'staging'
+      #     REDEFINE_SESSION_ID: ${{ steps.dry_run.outputs.session_id }}
+      #   run: |
+      #     if `redefine get session_check`; then
+      #       echo "session is still running!"
+      #       echo "status=0" >> $GITHUB_OUTPUT
+      #     else
+      #       echo "status=1" >> $GITHUB_OUTPUT
+      #     fi
 
       - name: Cypress run tests worker 1
         uses: cypress-io/github-action@v4
-        if: steps.session_check1.outputs.status == '0'
+        # if: steps.session_check1.outputs.status == '0'
         env:
           REDEFINE_SESSION_ID: ${{ steps.dry_run.outputs.session_id }}
         with:
@@ -172,7 +172,7 @@ jobs:
           REDEFINE_ENVIRONMENT: 'staging'
           REDEFINE_SESSION_ID: ${{ steps.dry_run.outputs.session_id }}
         run: |
-          if `redefine get session_check --verbose`; then
+          if `redefine get session_check`; then
             echo "session is still running!"
             echo "status=0" >> $GITHUB_OUTPUT
           else 
@@ -201,7 +201,7 @@ jobs:
           REDEFINE_ENVIRONMENT: 'staging'
           REDEFINE_SESSION_ID: ${{ steps.dry_run.outputs.session_id }}
         run: |
-          if `redefine get session_check --verbose`; then
+          if `redefine get session_check`; then
             echo "session is still running!"
             echo "status=0" >> $GITHUB_OUTPUT
           else 
@@ -230,7 +230,7 @@ jobs:
           REDEFINE_ENVIRONMENT: 'staging'
           REDEFINE_SESSION_ID: ${{ steps.dry_run.outputs.session_id }}
         run: |
-          if `redefine get session_check --verbose`; then
+          if `redefine get session_check`; then
             echo "session is still running!"
             echo "status=0" >> $GITHUB_OUTPUT
           else 
