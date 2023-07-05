@@ -72,37 +72,191 @@ jobs:
 
       - name: Seed Database
         run: pnpm run seed
-      
-      - name: Install and Build Redefine
+
+      - name: Install and Build Redefine for dry run
+        id: dry_run
         env:
-          REDEFINE_AUTH: "e88afb65-65ef-4798-bc9d-db4c5342f7f3::163bf879-4060-4636-9fb6-49161e68095a"
+          REDEFINE_AUTH: 'e88afb65-65ef-4798-bc9d-db4c5342f7f3::163bf879-4060-4636-9fb6-49161e68095a'
+          REDEFINE_ENVIRONMENT: 'staging'
         run: |
-          pip install redefine --index-url https://redefine.dev/staging/pip/
+          pip install redefine-0.16.52.post3-py3-none-manylinux1_x86_64.whl 
+
+          REDEFINE_SESSION_ID=`redefine get session_id`
+          echo "session_id=$REDEFINE_SESSION_ID" >> $GITHUB_OUTPUT
+
           redefine config set environment=staging
           redefine config set redefine_address=dune-tf-staging.redefine.dev
           redefine config set stable_branch=main
-          redefine config set dry_run=false
+          redefine config set dry_run=true
           redefine config set log_to_file=true
-          # need to run redefine after setting config
-          redefine start --prioritize --cypress --verbose
 
-      - name: Cypress run tests
+          redefine config set time_limit=20
+          redefine config set selection_method=2 # one of these should be correct
+          redefine config set static_prediction=false
+
+          # need to run redefine after setting config
+          redefine start --optimize --cypress --verbose --dry-run --output-path=/tmp/redefine_specs.txt
+
+      - name: Cypress run dry-run
         uses: cypress-io/github-action@v4
+        env:
+          REDEFINE_SESSION_ID: ${{ steps.dry_run.outputs.session_id }}
         with:
           record: ${{ env.CYPRESS_RECORD_KEY != 0 }}
-          env:  REDEFINE_AUTH=e88afb65-65ef-4798-bc9d-db4c5342f7f3::163bf879-4060-4636-9fb6-49161e68095a
+          env: REDEFINE_AUTH=e88afb65-65ef-4798-bc9d-db4c5342f7f3::163bf879-4060-4636-9fb6-49161e68095a
           start: pnpm run start-ci
           wait-on: http://localhost:8000
           wait-on-timeout: 1200
           config: baseUrl=http://localhost:8000
           browser: ${{ matrix.browsers }}
-          # spec:  cypress/e2e/default/learn/challenges/code-storage.ts
-    
 
       - name: print redefine logs
         run: |
+          echo "specs file"
+          cat /tmp/redefine_specs.txt || true
+
+      - name: Install and Build Redefine
+        env:
+          REDEFINE_AUTH: 'e88afb65-65ef-4798-bc9d-db4c5342f7f3::163bf879-4060-4636-9fb6-49161e68095a'
+          REDEFINE_ENVIRONMENT: 'staging'
+          REDEFINE_SESSION_ID: ${{ steps.dry_run.outputs.session_id }}
+        run: |
+          pip install redefine-0.16.52.post3-py3-none-manylinux1_x86_64.whl 
+          redefine config set environment=staging
+          redefine config set redefine_address=dune-tf-staging.redefine.dev
+          redefine config set stable_branch=main
+          redefine config set dry_run=false
+          redefine config set log_to_file=true
+
+          # set to dynamic prediction
+          redefine config set time_limit=20
+          redefine config set selection_method=2 # one of these should be correct
+          redefine config set static_prediction=false
+
+          # need to run redefine after setting config,  no need to reinstall cypress
+          redefine start --worker --verbose
+
+      # - name: Get session check
+      #   id: session_check1
+      #   env:
+      #     REDEFINE_AUTH: 'e88afb65-65ef-4798-bc9d-db4c5342f7f3::163bf879-4060-4636-9fb6-49161e68095a'
+      #     REDEFINE_ENVIRONMENT: 'staging'
+      #     REDEFINE_SESSION_ID: ${{ steps.dry_run.outputs.session_id }}
+      #   run: |
+      #     if `redefine get session_check`; then
+      #       echo "session is still running!"
+      #       echo "status=0" >> $GITHUB_OUTPUT
+      #     else
+      #       echo "status=1" >> $GITHUB_OUTPUT
+      #     fi
+
+      - name: Cypress run tests worker 1
+        uses: cypress-io/github-action@v4
+        # if: steps.session_check1.outputs.status == '0'
+        env:
+          REDEFINE_SESSION_ID: ${{ steps.dry_run.outputs.session_id }}
+        with:
+          record: ${{ env.CYPRESS_RECORD_KEY != 0 }}
+          env: REDEFINE_AUTH=e88afb65-65ef-4798-bc9d-db4c5342f7f3::163bf879-4060-4636-9fb6-49161e68095a
+          start: pnpm run start-ci
+          wait-on: http://localhost:8000
+          wait-on-timeout: 1200
+          config: baseUrl=http://localhost:8000
+          browser: ${{ matrix.browsers }}
+          spec: cypress/e2e/default/learn/challenges/code-storage.ts
+
+      - name: Get session check
+        id: session_check2
+        env:
+          REDEFINE_AUTH: 'e88afb65-65ef-4798-bc9d-db4c5342f7f3::163bf879-4060-4636-9fb6-49161e68095a'
+          REDEFINE_ENVIRONMENT: 'staging'
+          REDEFINE_SESSION_ID: ${{ steps.dry_run.outputs.session_id }}
+        run: |
+          if `redefine get session_check`; then
+            echo "session is still running!"
+            echo "status=0" >> $GITHUB_OUTPUT
+          else
+            echo "status=1" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Cypress run tests worker 2
+        uses: cypress-io/github-action@v4
+        if: steps.session_check2.outputs.status == '0'
+        env:
+          REDEFINE_SESSION_ID: ${{ steps.dry_run.outputs.session_id }}
+        with:
+          record: ${{ env.CYPRESS_RECORD_KEY != 0 }}
+          env: REDEFINE_AUTH=e88afb65-65ef-4798-bc9d-db4c5342f7f3::163bf879-4060-4636-9fb6-49161e68095a
+          start: pnpm run start-ci
+          wait-on: http://localhost:8000
+          wait-on-timeout: 1200
+          config: baseUrl=http://localhost:8000
+          browser: ${{ matrix.browsers }}
+          spec: cypress/e2e/default/learn/challenges/code-storage.ts
+
+      - name: Get session check
+        id: session_check3
+        env:
+          REDEFINE_AUTH: 'e88afb65-65ef-4798-bc9d-db4c5342f7f3::163bf879-4060-4636-9fb6-49161e68095a'
+          REDEFINE_ENVIRONMENT: 'staging'
+          REDEFINE_SESSION_ID: ${{ steps.dry_run.outputs.session_id }}
+        run: |
+          if `redefine get session_check`; then
+            echo "session is still running!"
+            echo "status=0" >> $GITHUB_OUTPUT
+          else
+            echo "status=1" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Cypress run tests worker 3
+        uses: cypress-io/github-action@v4
+        if: steps.session_check3.outputs.status == '0'
+        env:
+          REDEFINE_SESSION_ID: ${{ steps.dry_run.outputs.session_id }}
+        with:
+          record: ${{ env.CYPRESS_RECORD_KEY != 0 }}
+          env: REDEFINE_AUTH=e88afb65-65ef-4798-bc9d-db4c5342f7f3::163bf879-4060-4636-9fb6-49161e68095a
+          start: pnpm run start-ci
+          wait-on: http://localhost:8000
+          wait-on-timeout: 1200
+          config: baseUrl=http://localhost:8000
+          browser: ${{ matrix.browsers }}
+          spec: cypress/e2e/default/learn/challenges/code-storage.ts
+
+      - name: Get session check
+        id: session_check4
+        env:
+          REDEFINE_AUTH: 'e88afb65-65ef-4798-bc9d-db4c5342f7f3::163bf879-4060-4636-9fb6-49161e68095a'
+          REDEFINE_ENVIRONMENT: 'staging'
+          REDEFINE_SESSION_ID: ${{ steps.dry_run.outputs.session_id }}
+        run: |
+          if `redefine get session_check`; then
+            echo "session is still running!"
+            echo "status=0" >> $GITHUB_OUTPUT
+          else
+            echo "status=1" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Cypress run tests worker 4
+        uses: cypress-io/github-action@v4
+        if: steps.session_check4.outputs.status == '0'
+        env:
+          REDEFINE_SESSION_ID: ${{ steps.dry_run.outputs.session_id }}
+        with:
+          record: ${{ env.CYPRESS_RECORD_KEY != 0 }}
+          env: REDEFINE_AUTH=e88afb65-65ef-4798-bc9d-db4c5342f7f3::163bf879-4060-4636-9fb6-49161e68095a
+          start: pnpm run start-ci
+          wait-on: http://localhost:8000
+          wait-on-timeout: 1200
+          config: baseUrl=http://localhost:8000
+          browser: ${{ matrix.browsers }}
+          spec: cypress/e2e/default/learn/challenges/code-storage.ts
+
+      - name: print redefine logs
+        run: |
+          echo "specs file"
+          cat /tmp/redefine_specs.txt || true
           echo "Redefine Daemon Log"
           cat /tmp/redefine_daemon.log || true
           echo "Redefine plugin Log"
           cat "/tmp/redefine_plugin.log" || true
-           
