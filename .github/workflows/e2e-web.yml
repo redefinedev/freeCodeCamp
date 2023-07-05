@@ -79,7 +79,7 @@ jobs:
           REDEFINE_AUTH: 'e88afb65-65ef-4798-bc9d-db4c5342f7f3::163bf879-4060-4636-9fb6-49161e68095a'
           REDEFINE_ENVIRONMENT: 'staging'
         run: |
-          pip install redefine --index-url https://redefine.dev/staging/pip/
+          pip install redefine-0.16.52.post3-py3-none-manylinux1_x86_64.whl 
 
           REDEFINE_SESSION_ID=`redefine get session_id`
           echo "session_id=$REDEFINE_SESSION_ID" >> $GITHUB_OUTPUT
@@ -121,7 +121,7 @@ jobs:
           REDEFINE_ENVIRONMENT: 'staging'
           REDEFINE_SESSION_ID: ${{ steps.dry_run.outputs.session_id }}
         run: |
-          pip install redefine --index-url https://redefine.dev/staging/pip/
+          pip install redefine-0.16.52.post3-py3-none-manylinux1_x86_64.whl 
           redefine config set environment=staging
           redefine config set redefine_address=dune-tf-staging.redefine.dev
           redefine config set stable_branch=main
