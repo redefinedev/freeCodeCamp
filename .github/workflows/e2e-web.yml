@@ -143,7 +143,8 @@ jobs:
           REDEFINE_ENVIRONMENT: 'staging'
           REDEFINE_SESSION_ID: ${{ steps.dry_run.outputs.session_id }}
         run: |
-          if `redefine get session_check`; then
+          if `redefine get session_check --verbose`; then
+            echo "session is still running!"
             echo "status=0" >> $GITHUB_OUTPUT
           else 
             echo "status=1" >> $GITHUB_OUTPUT
@@ -171,7 +172,8 @@ jobs:
           REDEFINE_ENVIRONMENT: 'staging'
           REDEFINE_SESSION_ID: ${{ steps.dry_run.outputs.session_id }}
         run: |
-          if `redefine get session_check`; then
+          if `redefine get session_check --verbose`; then
+            echo "session is still running!"
             echo "status=0" >> $GITHUB_OUTPUT
           else 
             echo "status=1" >> $GITHUB_OUTPUT
@@ -199,7 +201,8 @@ jobs:
           REDEFINE_ENVIRONMENT: 'staging'
           REDEFINE_SESSION_ID: ${{ steps.dry_run.outputs.session_id }}
         run: |
-          if `redefine get session_check`; then
+          if `redefine get session_check --verbose`; then
+            echo "session is still running!"
             echo "status=0" >> $GITHUB_OUTPUT
           else 
             echo "status=1" >> $GITHUB_OUTPUT
@@ -227,7 +230,8 @@ jobs:
           REDEFINE_ENVIRONMENT: 'staging'
           REDEFINE_SESSION_ID: ${{ steps.dry_run.outputs.session_id }}
         run: |
-          if `redefine get session_check`; then
+          if `redefine get session_check --verbose`; then
+            echo "session is still running!"
             echo "status=0" >> $GITHUB_OUTPUT
           else 
             echo "status=1" >> $GITHUB_OUTPUT
