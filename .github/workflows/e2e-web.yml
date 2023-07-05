@@ -84,7 +84,9 @@ jobs:
           redefine config set stable_branch=main
           redefine config set dry_run=false
           redefine config set log_to_file=true
+          echo "using ${GITHUB_SHA} for source_commit"
           redefine config set anonymization=false
+          redefine config set source_commit=${GITHUB_SHA}
           # need to run redefine after setting config
           redefine start --prioritize --cypress --verbose
 
