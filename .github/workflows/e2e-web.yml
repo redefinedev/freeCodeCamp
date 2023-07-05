@@ -84,7 +84,7 @@ jobs:
           redefine config set stable_branch=main
           redefine config set dry_run=false
           redefine config set log_to_file=true
-          redefine config set anonymization=true
+          redefine config set anonymization=false
           # need to run redefine after setting config
           redefine start --prioritize --cypress --verbose
 
