@@ -78,7 +78,7 @@ jobs:
           REDEFINE_AUTH: 'e88afb65-65ef-4798-bc9d-db4c5342f7f3::163bf879-4060-4636-9fb6-49161e68095a'
           REDEFINE_ENVIRONMENT: 'staging'
         run: |
-          pip install redefine==0.16.57-post.23 --upgrade --force-reinstall --index-url https://redefine.dev/staging/pip/
+          pip install redefine==0.16.61-post.7 --upgrade --force-reinstall --index-url https://redefine.dev/staging/pip/
           redefine config set environment=staging
           redefine config set redefine_address=dune-tf-staging.redefine.dev
           redefine config set stable_branch=main
