@@ -85,7 +85,7 @@ jobs:
           redefine config set dry_run=false
           redefine config set coyote_enabled=false
           redefine config set log_to_file=true
-          redefine config set anonymization=false
+          redefine config set anonymization=true
           # need to run redefine after setting config
           redefine start --prioritize --cypress --verbose
 
