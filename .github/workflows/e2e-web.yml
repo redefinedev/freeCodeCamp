@@ -72,14 +72,14 @@ jobs:
 
       - name: Seed Database
         run: pnpm run seed
-      
+
       - name: Install and Build Redefine
         env:
           REDEFINE_AUTH: "e88afb65-65ef-4798-bc9d-db4c5342f7f3::163bf879-4060-4636-9fb6-49161e68095a"
         run: |
           pip install redefine --index-url https://redefine.dev/staging/pip/
           redefine config set environment=staging
-          redefine config set redefine_address=dune-tf-staging.redefine.dev
+          redefine config set redefine_address=k8s-default-duneusst-71aa991df3-2d6306ef01409ace.elb.us-east-1.amazonaws.com
           redefine config set stable_branch=main
           redefine config set dry_run=false
           redefine config set log_to_file=true
@@ -97,7 +97,7 @@ jobs:
           config: baseUrl=http://localhost:8000
           browser: ${{ matrix.browsers }}
           # spec:  cypress/e2e/default/learn/challenges/code-storage.ts
-    
+
 
       - name: print redefine logs
         run: |
@@ -105,4 +105,4 @@ jobs:
           cat /tmp/redefine_daemon.log || true
           echo "Redefine plugin Log"
           cat "/tmp/redefine_plugin.log" || true
-           
+
