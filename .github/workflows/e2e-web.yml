@@ -79,7 +79,7 @@ jobs:
         run: |
           pip install redefine --index-url https://redefine.dev/staging/pip/
           redefine config set environment=staging
-          redefine config set redefine_address=k8s-default-duneusst-71aa991df3-2d6306ef01409ace.elb.us-east-1.amazonaws.com
+          redefine config set redefine_address=k8s-default-duneuspr-f8d2e1d0b1-99cc377aa42baf3a.elb.us-east-1.amazonaws.com
           redefine config set stable_branch=main
           redefine config set dry_run=false
           redefine config set log_to_file=true
