@@ -11,13 +11,13 @@ on:
 jobs:
   cypress-run:
     name: Test
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:
         #browsers: [chrome, firefox, electron]
         browsers: [chrome]
-        node-version: [18.x]
+        node-version: [20.x]
         # include:
         #   - browsers: electron
         #     spec: cypress/e2e/default/learn/challenges/projects.ts
@@ -72,32 +72,28 @@ jobs:
 
       - name: Seed Database
         run: pnpm run seed
-      
+
       - name: Install and Build Redefine
         env:
-          REDEFINE_AUTH: "e88afb65-65ef-4798-bc9d-db4c5342f7f3::163bf879-4060-4636-9fb6-49161e68095a"
+          REDEFINE_AUTH: 'e88afb65-65ef-4798-bc9d-db4c5342f7f3::163bf879-4060-4636-9fb6-49161e68095a'
         run: |
           pip install redefine --index-url https://redefine.dev/staging/pip/
-          redefine config set environment=staging
-          redefine config set redefine_address=dune-tf-staging.redefine.dev
           redefine config set stable_branch=main
           redefine config set dry_run=false
           redefine config set log_to_file=true
-          # need to run redefine after setting config
           redefine start --prioritize --cypress --verbose
 
       - name: Cypress run tests
         uses: cypress-io/github-action@v4
         with:
           record: ${{ env.CYPRESS_RECORD_KEY != 0 }}
-          env:  REDEFINE_AUTH=e88afb65-65ef-4798-bc9d-db4c5342f7f3::163bf879-4060-4636-9fb6-49161e68095a
+          env: REDEFINE_AUTH=e88afb65-65ef-4798-bc9d-db4c5342f7f3::163bf879-4060-4636-9fb6-49161e68095a
           start: pnpm run start-ci
           wait-on: http://localhost:8000
           wait-on-timeout: 1200
           config: baseUrl=http://localhost:8000
           browser: ${{ matrix.browsers }}
           # spec:  cypress/e2e/default/learn/challenges/code-storage.ts
-    
 
       - name: print redefine logs
         run: |
@@ -105,4 +101,3 @@ jobs:
           cat /tmp/redefine_daemon.log || true
           echo "Redefine plugin Log"
           cat "/tmp/redefine_plugin.log" || true
-           
